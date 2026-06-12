@@ -7,7 +7,7 @@ const knexDatabaseConfig = require('../../database/database_config/knexConfig.js
 // Criar a conecção do banco de dados do MySQL 
 const knexConection = knex(knexDatabaseConfig.development)
 
-const insertUsuario = async function(login, senha){
+const insertUsuario = async function(usuario){
     
     try {
         
@@ -15,8 +15,8 @@ const insertUsuario = async function(login, senha){
                         login,
                         senha
                         )values(
-                        '${login.login}',
-                        '${senha.senha}'
+                        '${usuario.login}',
+                        '${usuario.senha}'
                         );`
         
         let result = await knexConection.raw(sql)
@@ -28,8 +28,30 @@ const insertUsuario = async function(login, senha){
         }
 
     } catch (error) {
-        console.log(error)
         return false
     }
+}
+
+const selectById = async function (id){
+    try {
+        let sql = `select * from tbl_usuario where id = ${id};`
+
+        let result = await knexConection.raw(sql)
+        if(result){
+            return result[0].insertId
+        }else{
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+}
+
+
+
+module.exports = {
+    insertUsuario,
+    selectById
 }
 
