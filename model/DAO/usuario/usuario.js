@@ -11,9 +11,25 @@ const insertUsuario = async function(login, senha){
     
     try {
         
-        let sql = ``
+        let sql = `insert into tbl_usuario(
+                        login,
+                        senha
+                        )values(
+                        '${login.login}',
+                        '${senha.senha}'
+                        );`
+        
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return result[0].insertId
+        }else{
+            return false
+        }
 
     } catch (error) {
-        
+        console.log(error)
+        return false
     }
 }
+
