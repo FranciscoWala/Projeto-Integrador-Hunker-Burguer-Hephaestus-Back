@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "knex": "^3.2.10",
+    "mysql2": "^3.22.5"
+  }
+}
