@@ -41,7 +41,7 @@ const SUCCESS_CREATED_ITEM = {
 const ERRO_NOT_FONDI = {
     status: false,
     status_code: 404,
-    message: 'não foram encontrado para retorno para retorno'
+    message: 'dados não encontrados'
 }
 
 const SUCCESS_RESPOSE ={
@@ -52,7 +52,7 @@ const SUCCESS_RESPOSE ={
 const SUCCESS_UPDATE_ITEM = {
     status: true,
     status_code: 200,
-    message: 'item atualizado com sucesso?'
+    message: 'item atualizado com sucesso'
 }
 
 const SUCCESS_DELETE_ITEM = {
@@ -64,7 +64,7 @@ const SUCCESS_DELETE_ITEM = {
 const SUCCESS_CREATED_ITEM_WARING = {
     status: true,
     status_code: 200,
-    message: 'Item inserido com sucesso! poren algun dados tivrão problemas no cadrasto [DADOS RELACIONAMENTO]'
+    message: 'Item inserido com sucesso! porem algun dados tiveram problemas no cadrasto [DADOS  DE RELACIONAMENTO]'
 }
 
 
