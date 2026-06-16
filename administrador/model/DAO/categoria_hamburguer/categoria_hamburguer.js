@@ -24,8 +24,18 @@ const insertCategoriaHamburguer = async function (categoriaHamburguer) {
                         ${categoriaHamburguer.id_categoria}
                     );`
 
+    let result = await knexConection.raw(sql)
+
+    if(result) {
+        return true
+    } else {
+        return false
+    }
+
     } catch (error) {
-        console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
+
+        console.log(`Problemas em inserir categoria hamburguer [MODEL] ${error}`);
+
         return false
     }
 
@@ -35,48 +45,103 @@ const updateCategoriaHamburguer = async function (categoriaHamburguer) {
 
     try {
 
-        let sql = ``
+        let sql = `
+            update tbl_categoria_hamburguer 
+	        set 
+                id_hamburguer = ${categoriaHamburguer.id_hamburguer},
+                id_categoria = ${categoriaHamburguer.id_categoria}
+                where id = ${categoriaHamburguer.id};`
+
+        let result = await knexConection.raw(sql)
+
+        if(result) {
+            return true
+        } else {
+            return false
+        }
 
     } catch (error) {
+
         console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
+
         return false
     }
 
 }
-const selectAllCategoriaHamburguer = async function (categoriaHamburguer) {
+
+const selectAllCategoriaHamburguer = async function () {
 
     try {
 
-        let sql = ``
+        let sql = `select * from tbl_categoria_hamburguer order by id desc;`
+
+        let result = await knexConection.raw(sql)
+
+        if(result) {
+            return true
+        } else {
+            return false
+        }
 
     } catch (error) {
+
         console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
+
         return false
     }
 
 }
 
-const selcetByIdCategoriaHamburguer = async function (categoriaHamburguer) {
+const seletByIdCategoriaHamburguer = async function (categoriaHamburguer) {
 
     try {
 
-        let sql = ``
+        let sql = `select * from tbl_categoria_hamburguer where id = ${categoriaHamburguer.id};`
+
+        let result = await knexConection.raw(sql)
+
+        if(result) {
+            return true
+        } else {
+            return false
+        }
 
     } catch (error) {
+
         console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
+
         return false
     }
 
 }
+
 const deleteCategoriaHamburguer = async function (categoriaHamburguer) {
 
     try {
 
-        let sql = ``
+        let sql = `delete from tbl_categoria_hamburguer where id = ${categoriaHamburguer.id};`
 
-    } catch (error) {
+        let result = await knexConection.raw(sql)
+
+        if(result) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {  
+         
         console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
+
         return false
     }
 
+}
+
+module.exports = {
+    insertCategoriaHamburguer,
+    updateCategoriaHamburguer,
+    selectAllCategoriaHamburguer,
+    seletByIdCategoriaHamburguer,
+    deleteCategoriaHamburguer
 }
