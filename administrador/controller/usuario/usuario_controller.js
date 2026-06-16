@@ -80,10 +80,109 @@ const buscarUsuario = async function(id){
     }
 }
 
+const listarUsuario = async function(){
+    let customMenssagen = JSON.parse(JSON.stringify(mensagens))
 
+    try {
+        let result = await usuarioDAO.selectUsuario()
+
+        if (result) {
+            if (result.length > 0) {
+                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_RESPOSE.status
+                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_RESPOSE.status_code
+                customMenssagen.DEFAULT_MESSAGE.response.filme = result
+                customMenssagen.DEFAULT_MESSAGE.response.count = result.length
+                return customMenssagen.DEFAULT_MESSAGE
+            } else {
+                return customMenssagen.ERRO_NOT_FONDI
+            }
+        } else {
+            return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
+        }
+
+    } catch (error) {
+        return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const atualizarUsuario = async function(usuario, id, ContentType){
+    let customMenssagen = JSON.parse(JSON.stringify(mensagens))
+    
+    try {
+        if(String(ContentType).toUpperCase() == "APPLICATION/JSON"){
+
+            let resultBuscaID = await buscarUsuario(id)
+
+
+            if(resultBuscaID.status){
+                let validar = await validarDados(usuario)
+
+                if(!validar){
+                    usuario.id = Number(id)
+
+                    let result = await usuarioDAO.update(usuario)
+                    if(result){
+                        customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_UPDATE_ITEM.status
+                        customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_UPDATE_ITEM.status_code
+                        customMenssagen.DEFAULT_MESSAGE.mensage = customMenssagen.SUCCESS_UPDATE_ITEM.mensage
+                        customMenssagen.DEFAULT_MESSAGE.response = usuario
+
+                        return customMenssagen.DEFAULT_MESSAGE
+                    }else{
+                        return customMenssagen.ERRO_NOT_FONDI
+                    }
+                }else{
+                    return validar
+                }  
+
+            }else{
+                return resultBuscaID
+            }
+  
+        }else{
+            return customMenssagen.ERROR_CONTENT_TYPE
+        }
+
+
+    } catch (error) {
+        return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const deletarUsuario = async function(id){
+    let customMenssagen = JSON.parse(JSON.stringify(mensagens))
+    try {
+       let buscar = await buscarUsuario(id)
+
+        if(buscar.status){
+            let result = await usuarioDAO.deletUsuario(id)
+
+            if(result){
+                
+                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_DELETE_ITEM.status
+                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_DELETE_ITEM.status_code
+                customMenssagen.DEFAULT_MESSAGE.message = customMenssagen.SUCCESS_DELETE_ITEM.message
+
+                return customMenssagen.DEFAULT_MESSAGE
+
+            }else{
+                return customMenssagen.ERROR_INTERNAL_SERVER_MODEL
+            }
+        }else{            
+            return buscar
+        }
+
+    } catch (error) {        
+        return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
+
+    }
+}
 
 
 module.exports = {
     inserirUsuario,
-    buscarUsuario
+    buscarUsuario,
+    listarUsuario,
+    atualizarUsuario,
+    deletarUsuario
 }

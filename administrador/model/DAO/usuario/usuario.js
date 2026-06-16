@@ -49,9 +49,62 @@ const selectById = async function (id){
 }
 
 
+const selectUsuario = async function(){
+    try {
+        let sql = 'select * from tbl_usuario order by id desc;'
+        let result = await knexConection.raw(sql)
+        
+        if(Array.isArray(result)){
+            return result[0]  
+        }else{
+            return false
+        }
+
+    } catch (error) {
+        return false
+    }
+}
+
+const update = async function (usuario){
+    try {
+        let sql = `update tbl_usuario set
+                    genero = '${usuario.login}',
+                    where id = '${usuario.senha}'`
+
+        let result = await knexConection.raw(sql)
+        
+        if(result){
+            return true
+        }else{
+            return false
+        }
+        
+    } catch (error) {
+        return false
+    }
+}
+
+const deletUsuario = async function(id){
+    try {
+        let sql = `delete from tbl_usuario where id=${id}`
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return true
+        }else{
+            return false
+        }
+
+    } catch (error) {        
+        return false
+    }
+}
 
 module.exports = {
     insertUsuario,
-    selectById
+    selectById,
+    selectUsuario,
+    update,
+    deletUsuario
 }
 
