@@ -177,7 +177,57 @@ async function validarDados(ingredienteHamburguer) {
 }
 
 async function buscarIngredienteIDHamburguer(idHamburguer) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+
+    try {
+        if (idHamburguer == undefined || String(idHamburguer).replaceAll(" ", "") == ''|| idHamburguer == null || isNaN(idHamburguer)) {
+            customMessage.ERROR_BAD_REQUEST.field = "[ID_HAMBURGUER] INVÁLIDO"
+            return customMessage.ERROR_BAD_REQUEST
+        }else{
+            let result = await ingredienteHamburguerDAO.selectIngredienteByIDHamburguer(idHamburguer)
+
+            if (result) {
+                if (result.length > 0) {
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.response.ingrediente_hamburguer = result
+
+                    return customMessage.DEFAULT_MESSAGE //200
+                }else{
+                    return customMessage.ERROR_NOT_FOUND //404
+                }
+            } else {
+                return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 [MODEL]
+            }
+        }
+    } catch (error) {
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 [CONTROLLER]
+    }
+}
+
+async function buscarHamburguerIDIngrediente(idIngrediente) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
     
+    try {
+        if (idIngrediente == undefined || String(idIngrediente).replaceAll(" ", "") == ''|| idIngrediente == null || isNaN(idIngrediente)) {
+            customMessage.ERROR_BAD_REQUEST.field = "[ID_INGREDIENTE] INVÁLIDO"
+            return customMessage.ERROR_BAD_REQUEST //400
+        }else{
+            let result = await ingredienteHamburguerDAO.selectHamburguerByIDIngrediente(idIngrediente)
+
+            if (result.length > 0) {
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                customMessage.DEFAULT_MESSAGE.response.ingrediente_hamburguer = result
+
+                return customMessage.DEFAULT_MESSAGE //200
+            } else {
+                return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 [MODEL]
+            }
+        }
+    } catch (error) {
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 [CONTROLLER]
+    }
 }
 
 async function tratarDados(ingredienteHamburguer) {

@@ -154,10 +154,35 @@ async function selectIngredienteByIDHamburguer(idHamburguer) {
         let result = await knexConection.raw(sql)
 
         if (result) {
-            return true
+            return result[0]
         } else {
             return false
         }
+    } catch (error) {
+        return false
+    }
+}
+
+async function selectHamburguerByIDIngrediente(idIngrediente) {
+    try {
+        sql = 
+        `
+            select tbl_hamburguer.*
+                from tbl_hamburguer
+            inner join tbl_ingrediente_hamburger
+				on tbl_ingrediente_hamburger.id_hamburguer = tbl_hamburguer.id
+            inner join tbl_ingrediente
+                on tbl_ingrediente_hamburger.id_ingrediente = tbl_ingrediente.id
+            where tbl_ingrediente.id = ${idIngrediente};
+        `
+
+        let result = await knexConection.raw(sql)
+
+        if (result)
+            return result[0]
+        else
+            return false
+
     } catch (error) {
         return false
     }
@@ -172,5 +197,6 @@ module.exports = {
     updateIngredienteHamburguer,
     deleteIngredienteHamburguer,
     deleteIngredienteByIDHamburguer,
-    selectIngredienteByIDHamburguer
+    selectIngredienteByIDHamburguer,
+    selectHamburguerByIDIngrediente
 }
