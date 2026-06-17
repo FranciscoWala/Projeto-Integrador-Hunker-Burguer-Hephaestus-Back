@@ -6,7 +6,7 @@ use db_honker_burger;
 
 # criando tabela de ingredientes
 create table tbl_ingrediente(
-	id int not null primary key,
+    id int not null auto_increment primary key,
     nome varchar(45) not null,
     foto varchar(250) not null,
     preco decimal(5,2) not null
@@ -14,54 +14,31 @@ create table tbl_ingrediente(
 
 # criando tabela de categoria
 create table tbl_categoria(
-	id int not null primary key,
+	id int not null auto_increment primary key,
     categoria varchar(15)
 );
 
 # criando tabela de hamburguer
 create table tbl_hamburguer(
-	id int not null primary key,
+	id int not null auto_increment primary key,
 	nome varchar(45) not null,
     preco decimal(5,2) not null,
     foto varchar(250) not null,
     descricao text not null
 );
 
-# criando tabela de tipo de usuario (segundario)
-create table tbl_tipo_usuario(
-	id int not null primary key,
-	tipo varchar(30) not null
-);
-
-# criando tabela de promoção (segundario)
-#create table tbl_promocao(
-#	id int not null primary key,
-#	data_inicio date not null,
-#    data_final date not null,
-#    preco decimal(5,2) not null
-#);
-
-# criando tabela de tipo de promoção (segundario)
-#create table tbl_tipo(
-#	id int not null primary key,
-#	tipo varchar(45) not null
-#);
 
 # criando tabela de o usuarios 
 create table tbl_usuario(
-	id int not null primary key,
+	id int not null auto_increment primary key,
 	login varchar(150) not null,
     senha varchar(100) not null
 );
 
-#alter table tbl_usuario 
-#	modify column senha varchar(512) not null;
-
-# tabelas que recebem a chave extrangeira 
 
 # criando tabela intermediaria de ingrediente e hamburger
 create table tbl_ingrediente_hamburger(
-	id int not null primary key,
+	id int not null auto_increment primary key,
 	id_ingrediente int not null,
     id_hamburguer int not null,
 	
@@ -75,7 +52,7 @@ create table tbl_ingrediente_hamburger(
 
 # criando tabela intermediaria de categoria e hamburger
 create table tbl_categoria_hamburguer(
-	id int not null primary key,
+	id int not null auto_increment primary key,
 	id_hamburguer int not null,
     id_categoria int not null,
     
@@ -85,6 +62,41 @@ create table tbl_categoria_hamburguer(
     constraint FK_CATEGORIAHAMBURGUER_HAMBURGUER
     foreign key (id_hamburguer) references tbl_hamburguer(id)
 );
-
-
 show tables;
+
+insert into tbl_hamburguer(
+                nome,
+                preco,
+                foto,
+                descricao
+            )values(
+                'Jegue Burguer',
+                '20.0',
+                'img/asd',
+                'hamburguer de carne de jumento'
+            );
+            
+insert into tbl_ingrediente(
+                nome,
+                preco,
+                foto
+            )values(
+                '${ingrediente.nome}',
+                2.00,
+                '${ingrediente.foto}'
+            );
+
+
+
+insert into tbl_ingrediente_hamburger(
+                id_ingrediente,
+                id_hamburguer
+            )values(
+                1,
+                1
+            ); 
+show databases;
+
+select * from tbl_ingrediente_hamburger;
+
+ 
