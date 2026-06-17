@@ -5,6 +5,8 @@ const cors = require("cors")
 const bodyParserJSON = bodyParser.json()
 
 const app = express()
+app.use(cors(corsOpitions))
+
 
 const corsOpitions = {
     origin: ["*"], //configuração  de origem da requisicão (IP ou dominio)
@@ -12,6 +14,9 @@ const corsOpitions = {
     allowedHeaders: ["Content-type", "Authorization"] //configuração de permossoes
 }
 
-app.use(cors(corsOpitions))
 
-module.exports = routers
+app.listen(8080, () => {
+    console.log("API aguardando novas requisições...");
+})
+
+module.exports = router 

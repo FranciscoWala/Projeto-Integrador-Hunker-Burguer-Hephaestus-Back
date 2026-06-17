@@ -19,7 +19,7 @@ async function insertHamburguer(hamburguer) {
     try {
         let sql = 
         `
-            insert int tbl_hamburguer(
+            insert int tbl_hamburguer(       
                 nome,
                 preco,
                 foto,
