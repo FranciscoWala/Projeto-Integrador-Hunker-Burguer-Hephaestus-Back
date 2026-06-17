@@ -1,0 +1,8 @@
+{
+    "yaml.schemas": {
+        "swaggerviewer:openapi": [
+            "file:///Users/25205657/Downloads/api-documentation.yaml"
+        ],
+        "https://gitlab.com/appsemble/appsemble/-/raw/HEAD/packages/cli/assets/appsemblerc.schema.json": "file:///Users/25205657/Documents/back-and/Projeto-Integrador-Hunker-Burguer-Hephaestus-Back/administrador/doc/api-documentation.yaml"
+    }
+}
