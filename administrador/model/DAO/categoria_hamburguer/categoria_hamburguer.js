@@ -100,9 +100,9 @@ const seletByIdCategoriaHamburguer = async function (id) {
 
         let result = await knexConection.raw(sql)
 
-        if(result) {
-            return true
-        } else {
+        if(Array.isArray(result)){
+            return result[0]
+        }else{
             return false
         }
 
