@@ -176,6 +176,10 @@ async function validarDados(ingredienteHamburguer) {
     }
 }
 
+async function buscarIngredienteIDHamburguer(idHamburguer) {
+    
+}
+
 async function tratarDados(ingredienteHamburguer) {
     ingredienteHamburguer.id_ingrediente = ingredienteHamburguer.id_ingrediente.replaceAll("'", "")
     ingredienteHamburguer.id_hamburguer = ingredienteHamburguer.id_hamburguer.replaceAll("'", "")
