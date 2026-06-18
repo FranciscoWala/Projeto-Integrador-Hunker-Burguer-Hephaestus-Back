@@ -251,6 +251,6 @@ module.exports = {
     inserirCategoriaHamburguer,
     listarCategoriaHamburguer,
     buscarCategoriaHamburguer,
-    atualizarHamburguer,
+    atualizarCategoriaHamburguer,
     excluirCategoriaHamburguer
 }

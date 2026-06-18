@@ -7,7 +7,7 @@
  *****************************************************************************/
 
 const knex = require('knex');
-const knexDatabaseConfig = require('../../database_config/knexConfig.js');
+const knexDatabaseConfig = require('../../database/database_config/knexConfig.js');
 
 const knexConection = knex(knexDatabaseConfig.development);
 const { criarSql } = require('../../../utils/criadorSql.js');

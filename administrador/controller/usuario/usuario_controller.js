@@ -1,4 +1,4 @@
-const mensagens = require('../controller/modulo/configMensages.js')
+const mensagens = require('../modulo/configMensages.js')
 
 const usuarioDAO = require('../../model/DAO/usuario/usuario.js')
 

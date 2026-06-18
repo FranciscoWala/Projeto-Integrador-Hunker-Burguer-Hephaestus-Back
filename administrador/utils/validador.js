@@ -4,7 +4,7 @@
  * Versão: 1.0.17.4
  * Data: 17/04/26
  ************************************************************************************************************/
-const { mensagem } = require('../controller/modulo/configMessages.js');
+const { mensagem } = require('../controller/modulo/configMessagesGabriel.js');
 
 
 /**

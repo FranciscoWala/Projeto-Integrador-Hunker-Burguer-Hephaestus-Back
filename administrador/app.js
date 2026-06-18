@@ -1,18 +1,18 @@
-const express = require("express")
-const cors = require("cors")
-
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const bodyParserJSON = bodyParser.json()
 
 const app = express()
-app.use(cors(corsOpitions))
-
 
 const corsOpitions = {
     origin: ["*"], //configuração  de origem da requisicão (IP ou dominio)
     methods: "GET, POST, PUT, DELETE, OPTIONS", //configiração dos verbos que serão utilizado na API
     allowedHeaders: ["Content-type", "Authorization"] //configuração de permossoes
 }
+
+app.use(cors(corsOpitions))
 
 const hamburguerRouter = require('./routers/hamburguer.router')
 app.use("/v1/hephaestus/honkerburguer/hamburguer",cors(), hamburguerRouter)
