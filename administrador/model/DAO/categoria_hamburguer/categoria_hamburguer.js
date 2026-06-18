@@ -27,7 +27,7 @@ const insertCategoriaHamburguer = async function (categoriaHamburguer) {
         let result = await knexConection.raw(sql)
 
         if (result) {
-            return true
+            return result[0].insertId
         } else {
             return false
         }
@@ -117,7 +117,7 @@ const seletByIdCategoriaHamburguer = async function (id) {
 
 const selectHamburguerByIdCategoria = async function (idCategoria) {
     try {
-        let sql = `		select tbl_categoria.*
+        let sql = `	select tbl_hamburguer.*
             from tbl_hamburguer
                 inner join tbl_categoria_hamburguer
                     on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
@@ -140,7 +140,7 @@ const selectHamburguerByIdCategoria = async function (idCategoria) {
 
 const selectCategoriaByIdHamburguer = async function (idHamburguer) {
     try {
-        let sql = `		select tbl_hamburguer.*
+        let sql = `	select tbl_categoria.*
             from tbl_hamburguer
                 inner join tbl_categoria_hamburguer
                     on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
@@ -184,9 +184,9 @@ const deleteCategoriaHamburguer = async function (categoriaHamburguer) {
 
 }
 
-const deleteCategoriaByIdHamburguer = async function (id_hamburguer) {
+const deleteCategoriaByIdHamburguer = async function (idHamburguer) {
     try {
-        let sql = `delete from tbl_categoria_hamburguer where id_hamburguer = ${id_hamburguer}`
+        let sql = `delete from tbl_categoria_hamburguer where id_hamburguer = ${idHamburguer}`
         let result = await knexConection.raw(sql)
 
         if (result) {
@@ -206,5 +206,6 @@ module.exports = {
     seletByIdCategoriaHamburguer,
     selectHamburguerByIdCategoria,
     selectCategoriaByIdHamburguer,
-    deleteCategoriaHamburguer
+    deleteCategoriaHamburguer,
+    deleteCategoriaByIdHamburguer
 }
