@@ -190,3 +190,11 @@ async function tratarDados(hamburguer) {
 
     return hamburguer
 }
+
+module.exports = {
+    inserirNovoHamburguer,
+    listarHamburgeres,
+    buscarHamburguer,
+    atualizarHamburguer,
+    excluirHamburguer
+}
