@@ -1,6 +1,10 @@
-drop database if exists db_honker_burger;
-create database if not exists db_honker_burger;
+create database db_honker_burger;
+
+#drop database db_honker_burger;
+
 use db_honker_burger;
+
+#criação das tabelas que apenas fornecen suas chaves extangeira
 
 # criando tabela de ingredientes
 create table tbl_ingrediente(
@@ -25,16 +29,15 @@ create table tbl_hamburguer(
     foto varchar(250) not null,
     descricao text not null
 );
-
 # criando tabela de o usuarios 
 create table tbl_usuario(
 	id int not null auto_increment primary key,
 	login varchar(150) not null,
-    senha varchar(512) not null
+    senha varchar(100) not null
 );
 
 # criando tabela intermediaria de ingrediente e hamburger
-create table tbl_ingrediente_hamburger(
+create table tbl_ingrediente_hamburguer(
 	id int not null auto_increment primary key,
 	id_ingrediente int not null,
     id_hamburguer int not null,
@@ -45,8 +48,7 @@ create table tbl_ingrediente_hamburger(
     
 	constraint FK_INGREDIENTEHAMBURGUER_HAMBURGUER
     foreign key (id_hamburguer) 
-	references tbl_hamburguer(id)
-    
+    references tbl_hamburguer(id)
 );
 
 # criando tabela intermediaria de categoria e hamburger
@@ -56,46 +58,23 @@ create table tbl_categoria_hamburguer(
     id_categoria int not null,
     
     constraint FK_CATEGORIAHAMBURGUER_CATEGORIA
-    foreign key (id_categoria) 
+    foreign key (id_categoria)
     references tbl_categoria(id),
     
     constraint FK_CATEGORIAHAMBURGUER_HAMBURGUER
     foreign key (id_hamburguer) 
     references tbl_hamburguer(id)
 );
-show tables;
 
-insert into tbl_hamburguer(
-                nome,
-                preco,
-                foto,
-                descricao
-            )values(
-                'Jegue Burguer',
-                '20.0',
-                'img/asd',
-                'hamburguer de carne de jumento'
-            );
-            
-insert into tbl_ingrediente(
-                nome,
-                preco,
-                foto
-            )values(
-                '${ingrediente.nome}',
-                2.00,
-                '${ingrediente.foto}'
-            );
-
-
-
-insert into tbl_ingrediente_hamburger(
-                id_ingrediente,
-                id_hamburguer
-            )values(
-                1,
-                1
-            ); 
-show databases;
+DELIMITER $
+create trigger tgrDeleteHamburguerCategoria
+		before delete on tbl_hamburguer
+        for each row
+        BEGIN
+			delete from tbl_categoria_hamburguer where id_hamburguer = old.id;
+            delete from tbl_ingrediente_hamburguer where id_hamburguer = old.id;
+		END$
+        
+drop trigger tgrDeleteHamburguerCategoria;
 
 show tables;
