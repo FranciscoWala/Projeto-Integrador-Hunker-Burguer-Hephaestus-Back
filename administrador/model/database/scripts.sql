@@ -63,5 +63,39 @@ create table tbl_categoria_hamburguer(
     foreign key (id_hamburguer) 
     references tbl_hamburguer(id)
 );
+show tables;
+
+insert into tbl_hamburguer(
+                nome,
+                preco,
+                foto,
+                descricao
+            )values(
+                'Jegue Burguer',
+                '20.0',
+                'img/asd',
+                'hamburguer de carne de jumento'
+            );
+            
+insert into tbl_ingrediente(
+                nome,
+                preco,
+                foto
+            )values(
+                '${ingrediente.nome}',
+                2.00,
+                '${ingrediente.foto}'
+            );
+
+
+
+insert into tbl_ingrediente_hamburger(
+                id_ingrediente,
+                id_hamburguer
+            )values(
+                1,
+                1
+            ); 
+show databases;
 
 show tables;
