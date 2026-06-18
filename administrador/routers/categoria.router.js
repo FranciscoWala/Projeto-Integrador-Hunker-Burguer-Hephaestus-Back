@@ -12,14 +12,14 @@ router.post('/', bodyParserJSON, async function(request, response){
     let dados = request.body
     let ContentType = request.headers['content-type']
 
-    let result = await categoriaController.inserirUsuario(dados,ContentType)
+    let result = await categoriaController.inserirNovaCategoria(dados,ContentType)
     
     response.status(result.status_code)
     response.json(result)
 })
 
 router.get('/', async function(request, response){
-    let result = await categoriaController.listarUsuario()
+    let result = await categoriaController.listarTodosCategorias()
 
     response.status(result.status_code)
     response.json(result)
@@ -27,7 +27,7 @@ router.get('/', async function(request, response){
 
 router.get('/:id', async function(request,response){
     let id = request.params.id
-    let result = await categoriaController.buscarUsuario(id)
+    let result = await categoriaController.buscarCategoria(id)
     
     response.status(result.status_code)
     response.json(result)
@@ -38,7 +38,7 @@ router.put('/:id', bodyParserJSON, async function(request, response){
     let id = request.params.id
     let dados = request.body
 
-    let result = await categoriaController.atualizarUsuario(dados, id, ContentType)
+    let result = await categoriaController.atualizarCategoria(dados, id, ContentType)
 
     response.status(result.status_code)
     response.json(result)
@@ -46,7 +46,7 @@ router.put('/:id', bodyParserJSON, async function(request, response){
 
 router.delete('/:id', async function(request, response){
     let id = request.params.id
-    let result = await categoriaController.deletarUsuario(id)
+    let result = await categoriaController.excluirCategoria(id)
     
     response.status(result.status_code)
     response.json(result)
