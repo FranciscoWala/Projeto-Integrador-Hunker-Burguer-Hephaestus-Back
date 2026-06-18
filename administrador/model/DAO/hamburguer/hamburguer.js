@@ -32,7 +32,7 @@ async function insertHamburguer(hamburguer) {
             );      
         `
 
-        let result = knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
         if (result) {
             return result[0].insertId
@@ -51,7 +51,7 @@ async function selectAllHamburguer() {
             select * from tbl_hamburguer order by id desc;
         `
 
-        let result = knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
         if (Array.isArray(result)) {
             return result[0]
@@ -70,7 +70,7 @@ async function selectByIDHamburguer(id) {
             select * from tbl_hamburguer where id=${id}
         `
 
-        let result = knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
         if (Array.isArray(result)) {
             return result[0]
@@ -95,7 +95,7 @@ async function updateHamburguer(hamburguer) {
             where id=${hamburguer.id}
         `
 
-        let result = knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
         if (result) {
             return true
@@ -114,7 +114,7 @@ async function deleteHamburguer(id) {
             delete from tbl_hamburguer where id=${id}
         `
 
-        let result = knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
         if (result) {
             return true
