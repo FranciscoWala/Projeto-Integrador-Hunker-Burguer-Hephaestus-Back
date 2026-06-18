@@ -38,30 +38,30 @@ const SUCCESS_CREATED_ITEM = {
     status_code: 201,
     message: 'Item inserido com sucesso!'
 }
-const ERRO_NOT_FONDI = {
+const ERROR_NOT_FOUND = {
     status: false,
     status_code: 404,
     message: 'dados não encontrados'
 }
 
-const SUCCESS_RESPOSE ={
+const SUCCESS_RESPONSE ={
     status: true,
     status_code: 200,
 }
 
-const SUCCESS_UPDATE_ITEM = {
+const SUCCESS_UPDATED_ITEM = {
     status: true,
     status_code: 200,
     message: 'item atualizado com sucesso'
 }
 
-const SUCCESS_DELETE_ITEM = {
+const SUCCESS_DELETED_ITEM = {
     status: true,
     status_code: 200,
     message: 'item deletado com sucesso'
 }
 
-const SUCCESS_CREATED_ITEM_WARING = {
+const SUCCESS_CREATED_ITEM_WARNING = {
     status: true,
     status_code: 200,
     message: 'Item inserido com sucesso! porem algun dados tiveram problemas no cadrasto [DADOS  DE RELACIONAMENTO]'
@@ -75,9 +75,10 @@ module.exports = {
     ERROR_INTERNAL_SERVER_MODEL,
     ERROR_CONTENT_TYPE,
     ERROR_INTERNAL_SERVER_CONTROLLER,
-    ERRO_NOT_FONDI,
-    SUCCESS_RESPOSE,
-    SUCCESS_UPDATE_ITEM,
-    SUCCESS_DELETE_ITEM,
-    SUCCESS_CREATED_ITEM_WARING
+    ERROR_NOT_FOUND,
+    SUCCESS_RESPONSE,
+    SUCCESS_UPDATED_ITEM,
+    SUCCESS_DELETED_ITEM,
+    SUCCESS_CREATED_ITEM,
+    SUCCESS_CREATED_ITEM_WARNING
 }

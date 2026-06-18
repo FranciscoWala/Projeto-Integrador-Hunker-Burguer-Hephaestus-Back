@@ -236,3 +236,13 @@ async function tratarDados(ingredienteHamburguer) {
 
     return ingredienteHamburguer
 }
+
+module.exports = {
+    inserirNovoIngredienteHamburguer,
+    listarIngredienteHamburger,
+    buscarIngredienteHamburguer,
+    atualizarHamburguer,
+    excluirIngredienteHamburguer,
+    buscarIngredienteIDHamburguer,
+    buscarHamburguerIDIngrediente
+}
