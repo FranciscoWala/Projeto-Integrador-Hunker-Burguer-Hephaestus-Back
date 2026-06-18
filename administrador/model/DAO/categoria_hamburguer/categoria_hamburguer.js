@@ -77,8 +77,8 @@ const selectAllCategoriaHamburguer = async function () {
 
         let result = await knexConection.raw(sql)
 
-        if(result) {
-            return true
+        if(Array.isArray(result)){
+            return result[0]
         } else {
             return false
         }
@@ -92,17 +92,17 @@ const selectAllCategoriaHamburguer = async function () {
 
 }
 
-const seletByIdCategoriaHamburguer = async function (categoriaHamburguer) {
+const seletByIdCategoriaHamburguer = async function (id) {
 
     try {
 
-        let sql = `select * from tbl_categoria_hamburguer where id = ${categoriaHamburguer.id};`
+        let sql = `select * from tbl_categoria_hamburguer where id = ${id};`
 
         let result = await knexConection.raw(sql)
 
-        if(result) {
-            return true
-        } else {
+        if(Array.isArray(result)){
+            return result[0]
+        }else{
             return false
         }
 
@@ -113,6 +113,30 @@ const seletByIdCategoriaHamburguer = async function (categoriaHamburguer) {
         return false
     }
 
+}
+
+//Função para retornar os dados do Genero filtrando pelo ID do Filme
+const selectCategoriaHamburguerById = async function(idCategoria){
+    try {
+        let sql = `		select tbl_categoria_hamburguer.*
+            from tbl_hamburguer
+                inner join tbl_categoria_hamburguer
+                    on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
+                inner join tbl_categoria
+                    on tbl_categoria.id = tbl_categoria_hamburguer.id_categoria
+            
+            where tbl_categoria_hamburguer.id = ${idCategoria.id};`
+
+        let result = await knexConection.raw(sql)
+
+        if(Array.isArray(result)){
+            return result[0]
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
 }
 
 const deleteCategoriaHamburguer = async function (categoriaHamburguer) {

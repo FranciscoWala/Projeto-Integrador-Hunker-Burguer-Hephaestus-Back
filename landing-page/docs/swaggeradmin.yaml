@@ -1,0 +1,571 @@
+openapi: 3.0.3
+info:
+  title: API Administrativa - Honker Burguer
+  description: |-
+   API destinada a controle de dados para o sistema de cardápio digital da hamburgueria Honker Burguer
+  termsOfService: http://swagger.io/terms/
+  contact:  
+    email: samuel.s.m.santos009@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8080
+    description: Servidor Local
+paths:
+
+  # HAMBURGUER
+  /v1/hephaestus/honkerburguer/hamburguer:
+    post:
+      tags:
+        - Hamburguer
+      summary: Adiciona um novo hamburguer
+      description: End point para enviar os dados do hamburguer a serem cadastrados
+      requestBody:
+        description: JSON contendo os dados do novo hamburguer a ser inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hamburguer'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+    get:
+      tags:
+        - Hamburguer
+      summary: Lista todos os Hamburgueres cadastrados
+      description: Listagem de todos os Hamburgueres registrados no sistema
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hamburguer'          
+           
+        '404':
+          description: Not Found
+        '500':
+          description: Error Internal Server (Controller/Model)
+  /v1/hephaestus/honkerburguer/hamburguer/{id}:
+    get:
+      tags:
+        - Hamburguer
+      summary: Busca um Hamburguer pelo ID
+      description: Retorna um Hamburguer pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hamburguer'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Not found
+        '500':
+          description: Error internal server (Controller/Model)
+    put:
+      tags:
+        - Hamburguer
+      summary: Atualiza um hamburguer pelo id
+      description: Buscar e atualizasr um hamburguer pelo id
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Dados para atualizar um Hamburguer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hamburguer'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Not found
+        '500':
+          description: Error Internal Server (Controller/Model)
+    delete:
+      tags:
+        - Hamburguer
+      summary: Delete Hamburguer
+      description: Excluir um Hamburguer
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      response:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Pet not found
+        '500': Error Internal Server (Controller/Model)
+
+  # USUARIO
+  /v1/hephaestus/honkerburguer/usuario:
+    post:
+      tags:
+        - Usuario
+      summary: Adiciona um novo usuario
+      description: End point para enviar os dados do usuario a serem cadastrados
+      requestBody:
+        description: JSON contendo os dados do novo usuario inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+    get:
+      tags:
+        - Usuario
+      summary: Lista todos os usuario cadastrados
+      description: End point responsável por listar os dados dos usuários cadastrados
+      requestBody:
+        description: JSON contendo os dados do novo usuario inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+  /v1/hephaestus/honkerburguer/usuario/{id}:
+    get:
+      tags:
+        - Usuario
+      summary: Retorna um usuario
+      description: End point responsável por retornar um usuário cadastrado pelo ID
+      requestBody:
+        description: JSON contendo os dados do novo usuario inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+    put:
+      tags:
+        - Usuario
+      summary: Busca e atualiza um usuario
+      description: End point responsável por buscar e atualizar os dados de um usuário pelo ID
+      requestBody:
+        description: JSON contendo os dados do novo usuario inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+    delete:
+      tags:
+        - Usuario
+      summary:
+        Delete Usuario
+      description: End point responsável por buscar e deletar um usuario pelo ID
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+
+  # INGREDIENTES
+  /v1/hephaestus/honkerburguer/ingrediente:
+    post:
+      tags:
+        - Ingrediente
+      summary: Adiciona um novo ingrediente
+      description: End point para enviar os dados do ingrediente a ser cadastrado
+      requestBody:
+        description: JSON contendo os dados do novo ingrediente inserido no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingrediente'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '415':
+          description: Invalid Content-Type
+        '500':
+          description: Error internal Server (Controller / model)
+    get:
+      tags:
+        - Ingrediente
+      summary: Lista todos os ingrediente cadastrados
+      description: End point para retornar a lista de ingredientes cadastrados
+      responses:
+        '200':
+          description: Sucessful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingrediente'
+        '404':
+          description: Not found
+        '500':
+          description: Error internal Server (Controller / model)
+  /v1/hephaestus/honkerburguer/ingrediente/{id}:
+    get:
+      tags:
+        - Ingrediente
+      summary: Retorna os dados de um ingrediente
+      description: End point para retornar os dados de um ingrediente cadastrado pelo id
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Sucessful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schema/Ingrediente'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Not found
+        '500':
+          description: Error internal Server (Controller / model)
+    put:
+      tags:
+        - Ingrediente
+      summary: Atualiza um ingrediente
+      description: End point responsável por buscar e atualizar os dados de um ingrediente cadastrado pelo ID
+      requestBody:
+        description: JSON contentendo os novos dados do ingrediente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingrediente'
+        required: true
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Not found
+        '500':
+          description: Error internal Server (Controller / model)  
+    delete:
+      tags:
+        - Ingrediente
+      summary: Delete Ingrediente
+      description: Endpoint responsável por excluir o ingrediente
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Sucessful Operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Servel Error (Model/Controller)
+
+  # CATEGORIA
+  /v1/hephaestus/honkerburguer/categoria:
+    post:
+      tags:
+        - Categoria
+      summary: Adiciona nova categoria
+      description: Adiciona uma nova categoria ao sistema
+      requestBody:
+        description: JSON contendo os dados da categoria a ser adicionada
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        required: true
+      responses:
+        '200':
+          description: Sucessful Operation
+        '400':
+          description: Invalid Output
+        '500':
+          description: Internal Serve Error (Model/Controller)
+    get:
+      tags:
+        - Categoria
+      summary: Lista todos as categorias cadastradas
+      desciption: Endpoint responsável por listar todas as categorias cadastradas
+      responses:
+        '200':
+          description: Sucessful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error (Model/Controller)
+  /v1/hephaestus/honkerburguer/categoria/{id}:
+    get:
+      tags:
+        - Categoria
+      summary: Retorna os dados de uma categoria
+      description: Endpoint responsável por retornar os dados de uma categoria pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Sucessful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Categoria not found
+        '500':
+          description: Internal Server Error (Model/Controller)
+    put:
+      tags:
+        - Categoria
+      summary: Busca e atualiza a categoria
+      decription: Endpoint responsável por atualizar a categoria pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: JSON com os novos dados
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+        required: true
+      responses:
+        '200':
+          description: Sucessful Operation
+        '400':
+          description: Invalid Inputs
+        '404':
+          description: Categoria Not Found
+        '415':
+          description: Invalid Content Type
+        '500':
+          description: Internal Server Error (Model/Controller)
+    delete:
+      tags:
+        - Categoria
+      summary: Delete Categoria
+      description: Endpoint responsável por excluir uma categoria pelo ID
+      parameters:
+        - name: id
+          in: path
+          description: ID para realizar a busca do hamburguer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Sucessful Operation
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Categoria Not Found
+
+ 
+components:
+  schemas:
+    Hamburguer:
+      required:
+        - nome
+        - preco
+        - foto
+        - descricao
+        - categoria
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number
+        foto:
+          type: string
+        descricao:
+          type: string
+        categoria:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - categoria
+            properties:
+              id:
+                type: integer
+              categoria:  
+                type: string
+        ingredientes:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - foto
+              - preco
+            properties:
+              id:
+                type: integer
+              foto:  
+                type: string
+              preco:
+                type: number
+    Usuario:
+      required:
+        - id
+        - login
+        - senha
+      type: object
+      properties:
+        id:
+          type: integer
+        login:
+          type: string  
+        senha:        
+          type: string    
+    Ingrediente:
+      required:
+        - id
+        - nome
+        - preco
+        - foto
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number  
+        foto:        
+          type: string
+    Categoria:
+      required:
+        - id
+        - nome
+        - foto
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        foto:
+          type: string
+  requestBodies:
+    Hamburguer:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Hamburguer'
