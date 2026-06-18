@@ -14,6 +14,8 @@ router.post('/', bodyParserJSON, async function(request, response){
 
     let result = await hamburguerController.inserirNovoHamburguer(dados,ContentType)
 
+    
+
     response.status(result.status_code)
     response.json(result)
 })

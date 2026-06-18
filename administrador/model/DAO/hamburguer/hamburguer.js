@@ -19,7 +19,7 @@ async function insertHamburguer(hamburguer) {
     try {
         let sql = 
         `
-            insert int tbl_hamburguer(       
+            insert into tbl_hamburguer(       
                 nome,
                 preco,
                 foto,
@@ -34,11 +34,15 @@ async function insertHamburguer(hamburguer) {
 
         let result = await knexConection.raw(sql)
 
+        console.log("dao: " + result);
+        
+
         if (result) {
             return result[0].insertId
         }else{
             return false
         }
+        
     } catch (error) {
         return false
     }
@@ -55,9 +59,10 @@ async function selectAllHamburguer() {
 
         if (Array.isArray(result)) {
             return result[0]
+        }else{
+            return false
         }
 
-        return false
     } catch (error) {
         return false
     }

@@ -19,7 +19,7 @@ async function insertIngredienteHamburguer(ingredienteHamburguer) {
     try {
         let sql = 
         `
-            insert int tbl_ingrediente_categoria(
+            insert into tbl_ingrediente_hamburguer(
                 id_ingrediente,
                 id_hamburguer
             )values(

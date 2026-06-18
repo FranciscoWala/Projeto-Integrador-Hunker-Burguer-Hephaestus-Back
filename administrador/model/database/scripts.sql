@@ -65,6 +65,59 @@ create table tbl_categoria_hamburguer(
     foreign key (id_hamburguer) 
     references tbl_hamburguer(id)
 );
+        
+#drop trigger tgrDeleteHamburguerCategoria;
+
+show tables;
+
+
+insert into tbl_hamburguer(       
+                nome,
+                preco,
+                foto,
+                descricao
+            )values(
+                '${hamburguer.nome}',
+                '20.0',
+                '${hamburguer.foto}',
+                '${hamburguer.descricao}'
+            ); 
+
+insert into tbl_ingrediente(
+                nome,
+                preco,
+                foto
+            )values(
+                '${ingrediente.nome}',
+                '26.0',
+                '${ingrediente.foto}'
+            );
+            
+insert into tbl_categoria(
+		categoria,
+        foto
+)values(
+	'asdfas',
+    'sadfasdd'
+);
+   
+            
+insert into tbl_categoria_hamburguer (
+                        id_hamburguer,
+                        id_categoria
+                        ) values (
+                        1,
+                        1
+                    );
+                    
+ insert into tbl_ingrediente_hamburguer(
+                id_ingrediente,
+                id_hamburguer
+            )values(
+                1,
+                1
+            );
+select * from tbl_ingrediente_hamburguer order by id desc;
 
 DELIMITER $
 create trigger tgrDeleteHamburguerCategoria
@@ -74,7 +127,3 @@ create trigger tgrDeleteHamburguerCategoria
 			delete from tbl_categoria_hamburguer where id_hamburguer = old.id;
             delete from tbl_ingrediente_hamburguer where id_hamburguer = old.id;
 		END$
-        
-drop trigger tgrDeleteHamburguerCategoria;
-
-show tables;
