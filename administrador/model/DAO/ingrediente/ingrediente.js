@@ -10,7 +10,8 @@
 const knex = require('knex')
 
 //Import do arquivo das configurações do Knex
-const knexDatabaseConfig = require('../../database/database_config/knexConfig')
+const knexDatabaseConfig = require('../../database/database_config/knexConfig.js')
+const { lock } = require('../../../routers/hamburguer.router.js')
 
 //Cria a conexão com o BD 
 const knexConection = knex(knexDatabaseConfig.development)
@@ -38,6 +39,8 @@ async function insertIngrediente(ingrediente) {
             return false
         }
     } catch (error) {
+        console.log(error);
+        
         return false
     }
 }
@@ -51,11 +54,12 @@ async function selectAllIngrediente() {
 
         let result = await knexConection.raw(sql)
 
+
         if (Array.isArray(result)) {
             return result[0]
+        }else{
+            return false
         }
-
-        return false
     } catch (error) {
         return false
     }

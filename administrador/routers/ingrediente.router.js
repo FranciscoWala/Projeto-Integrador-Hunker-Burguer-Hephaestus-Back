@@ -1,5 +1,5 @@
 
-const ingredienteController = require('../../landing-page/controller/ingrediente/ingredienteController.js')
+const ingredienteController = require('../controller/ingrediente/controller_ingrediente.js')
 const { Router } = require('express')
 
 const express = require('express')
@@ -12,13 +12,14 @@ router.post('/', bodyParserJSON, async function(request, response){
     let dados = request.body
     let ContentType = request.headers['content-type']
 
-    let result = await ingredienteController.inserirIngrediente(dados,ContentType)
+    let result = await ingredienteController.inserirNovoIngrediente(dados, ContentType)
+    
     response.status(result.status_code)
     response.json(result)
 })
 
 router.get('/', async function(request, response){
-    let result = await ingredienteController.listarIngrediente()
+    let result = await ingredienteController.listarIngredientes()    
 
     response.status(result.status_code)
     response.json(result)
@@ -27,7 +28,8 @@ router.get('/', async function(request, response){
 router.get('/:id', async function(request,response){
     let id = request.params.id
     let result = await ingredienteController.buscarIngrediente(id)
-    
+
+
     response.status(result.status_code)
     response.json(result)
 })
@@ -37,7 +39,7 @@ router.put('/:id', bodyParserJSON, async function(request, response){
     let id = request.params.id
     let dados = request.body
 
-    let result = await ingredienteController.atualizarIngrediente(dados, id, ContentType)
+    let result = await ingredienteController.atualizarIngrediente(dados,id,ContentType)
 
     response.status(result.status_code)
     response.json(result)

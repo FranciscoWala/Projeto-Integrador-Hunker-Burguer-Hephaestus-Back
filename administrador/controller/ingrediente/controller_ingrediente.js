@@ -25,14 +25,14 @@ async function inserirNovoIngrediente(ingrediente, contentType) {
                 return validar // retorna 400
             }else{
                 
-                let result = await ingredienteDAO.insertIngrediente(await tratarDados(ingrediente))
+                let result = await ingredienteDAO.insertIngrediente(ingrediente)
 
                 if (result) {
                     
                     ingrediente.id = result
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_CREATED_ITEM.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_CREATED_ITEM.status_code
-                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCESS_CREATED_ITEM.message
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
+                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
                     customMessage.DEFAULT_MESSAGE.response = ingrediente
 
                     return customMessage.DEFAULT_MESSAGE
@@ -56,20 +56,20 @@ async function listarIngredientes() {
 
         if (result) {
             if (result.length > 0) {
-                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
-                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                 customMessage.DEFAULT_MESSAGE.count = result.length
                 customMessage.DEFAULT_MESSAGE.response.ingrediente = result
 
                 return customMessage.DEFAULT_MESSAGE // 200
             }else{
-                customMessage.ERROR_NOT_FOUND //404
+                return customMessage.ERROR_NOT_FOUND //404
             }
         }else{
-            customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
         }
     } catch (error) {
-        customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
     }
 }
 
@@ -85,8 +85,8 @@ async function buscarIngrediente(id) {
 
             if (result) {
                 if (result.length > 0) {
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.response.ingrediente = result 
 
                     return customMessage.DEFAULT_MESSAGE
@@ -102,7 +102,7 @@ async function buscarIngrediente(id) {
     }
 }
 
-async function atualizarHamburguer(ingrediente, id, contentType) {
+async function atualizarIngrediente(ingrediente, id, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -115,11 +115,11 @@ async function atualizarHamburguer(ingrediente, id, contentType) {
                 if (!validar) {
                     ingrediente.id = Number(id)
 
-                    let result = await ingredienteDAO.updateIngrediente(await tratarDados(ingrediente))
+                    let result = await ingredienteDAO.updateIngrediente(ingrediente)
 
                     if (result) {
-                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_UPDATED_ITEM.status
-                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_UPDATED_ITEM.status_code
+                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
+                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                         customMessage.DEFAULT_MESSAGE.response = ingrediente
 
                         return customMessage.DEFAULT_MESSAGE //200
@@ -136,11 +136,11 @@ async function atualizarHamburguer(ingrediente, id, contentType) {
             return customMessage.ERROR_CONTENT_TYPE // 415
         }
     } catch (error) {
-        customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
     }
 }
 
-async function excluirHamburguer(id) {
+async function excluirIngrediente(id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
     
     try {
@@ -150,7 +150,7 @@ async function excluirHamburguer(id) {
             let result = await ingredienteDAO.deleteIngrediente(id)
 
             if (result) {
-                return customMessage.SUCESS_DELETED_ITEM    
+                return customMessage.SUCCESS_DELETED_ITEM    
             } else {
                 return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
             }
@@ -165,7 +165,7 @@ async function excluirHamburguer(id) {
 async function validarDados(ingrediente) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
-    if (ingrediente.nome == undefined || ingrediente.nome == null || ingrediente.nome == "" || ingrediente.length > 45) {
+    if (ingrediente.nome == undefined || ingrediente.nome == null || ingrediente.nome == "" || ingrediente.nome.length > 45) {
         customMessage.ERROR_BAD_REQUEST.field = '[NOME] INVALIDO'
         return customMessage.ERROR_BAD_REQUEST
     } else if(ingrediente.preco == undefined || ingrediente.preco == null || isNaN(ingrediente.preco) || ingrediente.preco.length > 5) {
@@ -185,4 +185,12 @@ async function tratarDados(ingrediente) {
     ingrediente.foto = ingrediente.foto.replaceAll("'", "")
 
     return ingrediente
+}
+
+module.exports = {
+    inserirNovoIngrediente,
+    listarIngredientes,
+    buscarIngrediente,
+    atualizarIngrediente,
+    excluirIngrediente
 }
