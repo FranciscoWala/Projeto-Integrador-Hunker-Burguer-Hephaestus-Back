@@ -1,6 +1,4 @@
-
 const hamburguerController = require('../controller/hamburguer/controller_hamburguer.js')
-const { Router } = require('express')
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -12,9 +10,7 @@ router.post('/', bodyParserJSON, async function(request, response){
     let dados = request.body
     let ContentType = request.headers['content-type']
 
-    let result = await hamburguerController.inserirNovoHamburguer(dados,ContentType)
-
-    
+    let result = await hamburguerController.inserirNovoHamburguer(dados, ContentType)
 
     response.status(result.status_code)
     response.json(result)
@@ -28,7 +24,7 @@ router.get('/:id', async function(request, response){
     response.json(result)
 }) 
 
-router.get('/', async function(request,response){
+router.get('/', async function(request, response){
     let result = await hamburguerController.listarHamburgeres()
     
     response.status(result.status_code)
