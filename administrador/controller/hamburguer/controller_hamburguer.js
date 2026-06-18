@@ -9,6 +9,12 @@
 //Import do DAO
 const hamburguerDAO = require('../../model/DAO/hamburguer/hamburguer.js')
 
+//import da controller de categoriaHamburguer
+const categoriaHamburguerController = require('../categoria_hamburguer/categoria_hamburguer_controller.js')
+
+//import da controller de categoriaHamburguer
+const ingredienteHamburguerController = require('./controller_ingrediente_hamburguer.js')
+
 //Import das mensagens
 const configMessages = require('../modulo/configMensages.js')
 const {json} = require('body-parser')
@@ -28,11 +34,39 @@ async function inserirNovoHamburguer(hamburguer, contentType) {
                 let result = await hamburguerDAO.insertHamburguer(await tratarDados(hamburguer))
 
                 if (result) {
-                    
                     hamburguer.id = result
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_CREATED_ITEM.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_CREATED_ITEM.status_code
-                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCESS_CREATED_ITEM.message
+
+                    for (itemCategoria of hamburguer.categoria) {
+                        let categoriaHamburguer = {
+                            "id_hamburguer": hamburguer.id,
+                            "id_categoria": categoria.id
+                        }
+
+                        let resultCategoriaHamburguer = await categoriaHamburguerController.inserirCategoriaHamburguer(categoriaHamburguer)
+
+                        if (resultCategoriaHamburguer.status) {
+                            return customMessage.SUCCESS_CREATED_ITEM_WARNING // 201 com alerta de cadastro
+                        }
+
+                    }
+
+                    for (itemIngrediente of hamburguer.ingrediente) {
+                        let ingredienteHamburguer = {
+                            "id_hamburguer": hamburguer.id,
+                            "id_ingrediente": ingrediente.id
+                        }
+
+                        let resultIngredienteHamburguer = await ingredienteHamburguerController.inserirNovoIngredienteHamburguer(ingredienteHamburguer)
+
+                        if (resultIngredienteHamburguer.status) {
+                            return customMessage.SUCCESS_CREATED_ITEM_WARNING // 201 com alerta de cadastro
+                        }
+
+                    }                  
+
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
+                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
                     customMessage.DEFAULT_MESSAGE.response = hamburguer
 
                     return customMessage.DEFAULT_MESSAGE

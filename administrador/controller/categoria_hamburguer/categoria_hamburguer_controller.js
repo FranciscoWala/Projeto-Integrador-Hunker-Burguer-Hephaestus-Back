@@ -128,7 +128,36 @@ async function buscarCategoriaHamburguer(id) {
     }
 }
 
-async function atualizarHamburguer(categoriaHamburguer, id, contentType) {
+async function buscarCategoriaByIdHamburguer(idHamburguer) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+    
+    try {
+        if (idHamburguer == undefined || String(idHamburguer).replaceAll(" ", "") == ''|| idHamburguer == null || isNaN(idHamburguer)) {
+            customMessage.ERROR_BAD_REQUEST.field = '[ID] INVALIDO'
+            return customMessage.ERROR_BAD_REQUEST //400
+        }else{
+            let result = await categoriaHamburguerDAO.selectCategoriaByIdHamburguer(idHamburguer)
+
+            if (result) {
+                if (result.length > 0) {
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.response.categoria = result
+                    
+                    return customMessage.DEFAULT_MESSAGE //200
+                } else {
+                    return customMessage.ERROR_NOT_FOUND //404
+                }
+            } else {
+                return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 [MODEL]
+            }
+        }
+    } catch (error) {
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 [CONTROLLER]
+    }
+}
+
+async function atualizarCategoriaHamburguer(categoriaHamburguer, id, contentType) {
 
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
@@ -140,14 +169,14 @@ async function atualizarHamburguer(categoriaHamburguer, id, contentType) {
                 let validar = await validarDados(categoriaHamburguer)
 
                 if (!validar) {
-                    hamburguer.id = Number(id)
+                    categoriaHamburguer.id = Number(id)
 
                     let result = await categoriaHamburguerDAO.updateCategoriaHamburguer(await tratarDados(categoriaHamburguer))
 
                     if (result) {
                         customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_UPDATED_ITEM.status
                         customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_UPDATED_ITEM.status_code
-                        customMessage.DEFAULT_MESSAGE.response = hamburguer
+                        customMessage.DEFAULT_MESSAGE.response = categoriaHamburguer
 
                         return customMessage.DEFAULT_MESSAGE //200
                     } else {
@@ -174,7 +203,7 @@ async function excluirCategoriaHamburguer(id) {
         let resultBusca = await buscarCategoriaHamburguer(id)
 
         if (resultBusca.status) {
-            let result = await hamburguerDAO.deleteHamburguer(id)
+            let result = await categoriaHamburguerDAO.deleteCategoriaHamburguer(id)
 
             if (result) {
                 return customMessage.SUCESS_DELETED_ITEM    
@@ -186,6 +215,28 @@ async function excluirCategoriaHamburguer(id) {
         }
     } catch (error) {
         return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+    }
+}
+
+async function excluirCategoriaByIdHamburguer(idHamburguer) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+    
+    try {
+        let resultBusca = await buscarCategoriaByIdHamburguer(idHamburguer)
+
+        if (resultBusca.status) {
+            let result = await categoriaHamburguerDAO.deleteCategoriaByIdHamburguer(idHamburguer)
+
+            if (result) {
+                return customMessage.SUCESS_DELETED_ITEM
+            } else {
+                return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 [MODEL]
+            }
+        }else{
+            return resultBusca
+        }
+    }catch (error) {
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 [CONTROLLER]
     }
 }
 

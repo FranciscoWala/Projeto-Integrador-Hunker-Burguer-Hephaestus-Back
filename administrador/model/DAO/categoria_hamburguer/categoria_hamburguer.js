@@ -24,13 +24,13 @@ const insertCategoriaHamburguer = async function (categoriaHamburguer) {
                         ${categoriaHamburguer.id_categoria}
                     );`
 
-    let result = await knexConection.raw(sql)
+        let result = await knexConection.raw(sql)
 
-    if(result) {
-        return true
-    } else {
-        return false
-    }
+        if (result) {
+            return result[0].insertId
+        } else {
+            return false
+        }
 
     } catch (error) {
 
@@ -54,7 +54,7 @@ const updateCategoriaHamburguer = async function (categoriaHamburguer) {
 
         let result = await knexConection.raw(sql)
 
-        if(result) {
+        if (result) {
             return true
         } else {
             return false
@@ -77,7 +77,7 @@ const selectAllCategoriaHamburguer = async function () {
 
         let result = await knexConection.raw(sql)
 
-        if(Array.isArray(result)){
+        if (Array.isArray(result)) {
             return result[0]
         } else {
             return false
@@ -100,9 +100,9 @@ const seletByIdCategoriaHamburguer = async function (id) {
 
         let result = await knexConection.raw(sql)
 
-        if(Array.isArray(result)){
+        if (Array.isArray(result)) {
             return result[0]
-        }else{
+        } else {
             return false
         }
 
@@ -115,23 +115,45 @@ const seletByIdCategoriaHamburguer = async function (id) {
 
 }
 
-//Função para retornar os dados do Genero filtrando pelo ID do Filme
-const selectCategoriaHamburguerById = async function(idCategoria){
+const selectHamburguerByIdCategoria = async function (idCategoria) {
     try {
-        let sql = `		select tbl_categoria_hamburguer.*
+        let sql = `	select tbl_hamburguer.*
             from tbl_hamburguer
                 inner join tbl_categoria_hamburguer
                     on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
                 inner join tbl_categoria
                     on tbl_categoria.id = tbl_categoria_hamburguer.id_categoria
             
-            where tbl_categoria_hamburguer.id = ${idCategoria.id};`
+            where tbl_categoria.id = ${idCategoria.id};`
 
         let result = await knexConection.raw(sql)
 
-        if(Array.isArray(result)){
+        if (Array.isArray(result)) {
             return result[0]
-        }else{
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
+const selectCategoriaByIdHamburguer = async function (idHamburguer) {
+    try {
+        let sql = `	select tbl_categoria.*
+            from tbl_hamburguer
+                inner join tbl_categoria_hamburguer
+                    on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
+                inner join tbl_categoria
+                    on tbl_categoria.id = tbl_categoria_hamburguer.id_categoria
+            
+            where tbl_hamburguer.id = ${idHamburguer.id};`
+
+        let result = await knexConection.raw(sql)
+
+        if (Array.isArray(result)) {
+            return result[0]
+        } else {
             return false
         }
     } catch (error) {
@@ -147,14 +169,14 @@ const deleteCategoriaHamburguer = async function (categoriaHamburguer) {
 
         let result = await knexConection.raw(sql)
 
-        if(result) {
+        if (result) {
             return true
         } else {
             return false
         }
 
-    } catch (error) {  
-         
+    } catch (error) {
+
         console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
 
         return false
@@ -162,10 +184,28 @@ const deleteCategoriaHamburguer = async function (categoriaHamburguer) {
 
 }
 
+const deleteCategoriaByIdHamburguer = async function (idHamburguer) {
+    try {
+        let sql = `delete from tbl_categoria_hamburguer where id_hamburguer = ${idHamburguer}`
+        let result = await knexConection.raw(sql)
+
+        if (result) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = {
     insertCategoriaHamburguer,
     updateCategoriaHamburguer,
     selectAllCategoriaHamburguer,
     seletByIdCategoriaHamburguer,
-    deleteCategoriaHamburguer
+    selectHamburguerByIdCategoria,
+    selectCategoriaByIdHamburguer,
+    deleteCategoriaHamburguer,
+    deleteCategoriaByIdHamburguer
 }
