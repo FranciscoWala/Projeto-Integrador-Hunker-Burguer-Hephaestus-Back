@@ -148,6 +148,18 @@ async function atualizarHamburguer(hamburguer, id, contentType) {
                     let result = await hamburguerDAO.updateHamburguer(await tratarDados(hamburguer))
 
                     if (result) {
+                        await ingredienteHamburguerController.excluirIngredienteHamburguer(id)
+
+                        for (let itemIngrediente of hamburguer.ingrediente) {
+                            
+                            let ingredienteHamburguer = {
+                                "id_hamburguer" : hamburguer.id,
+                                "id_ingrediente": itemIngrediente.id
+                            }
+
+                            await ingredienteHamburguerController.inserirNovoIngredienteHamburguer(ingredienteHamburguer, contentType)
+                        }
+
                         customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
                         customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                         customMessage.DEFAULT_MESSAGE.response = hamburguer
@@ -177,6 +189,8 @@ async function excluirHamburguer(id) {
         let resultBusca = await buscarHamburguer(id)
 
         if (resultBusca.status) {
+            await ingredienteHamburguerController.excluirIngredienteHamburguer(id)
+
             let result = await hamburguerDAO.deleteHamburguer(id)
 
             if (result) {

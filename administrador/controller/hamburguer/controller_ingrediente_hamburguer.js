@@ -3,7 +3,7 @@
 *  de dados para realizar o CRUD da tabela intermediária ingrediente_hamburguer
  * Data: 17/06/2026
  * Autor: Samuel Silva Moreira Dos Santos
- * Versão: 1.0
+ * Versão: 1.1
 */
 
 //Import do DAO
@@ -11,7 +11,7 @@ const ingredienteHamburguerDAO = require('../../model/DAO/ingrediente_hamburguer
 
 //Import das mensagens
 const configMessages = require('../modulo/configMensages.js')
-const {json} = require('body-parser')
+//CORREÇÃO: removido import desnecessário de '{json}' do 'body-parser'
 
 async function inserirNovoIngredienteHamburguer(ingredienteHamburguer, contentType) {
     //Cria uma cópia dos JSON do arquivo de configuração de mensagens
@@ -25,11 +25,14 @@ async function inserirNovoIngredienteHamburguer(ingredienteHamburguer, contentTy
                 return validar // retorna 400
             }else{
                 
-                let result = await ingredienteHamburguerDAO.insertIngredienteHamburguer
+                let result = await ingredienteHamburguerDAO.insertIngredienteHamburguer(ingredienteHamburguer)
+                //CORREÇÃO 1: faltava passar o parâmetro '(ingredienteHamburguer)' na chamada ao DAO
+                //CORREÇÃO 2: faltavam os parênteses '()' para executar a função do DAO
 
                 if (result) {
                     
-                    hamburguer.id = result
+                    ingredienteHamburguer.id = result
+                    //CORREÇÃO: variável era 'hamburguer' (inexistente), corrigido para 'ingredienteHamburguer'
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_CREATED_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_CREATED_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCESS_CREATED_ITEM.message
@@ -63,13 +66,16 @@ async function listarIngredienteHamburger() {
 
                 return customMessage.DEFAULT_MESSAGE // 200
             }else{
-                customMessage.ERROR_NOT_FOUND //404
+                return customMessage.ERROR_NOT_FOUND //404
+                //CORREÇÃO: faltava 'return' antes de 'customMessage.ERROR_NOT_FOUND'
             }
         }else{
-            customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            //CORREÇÃO: faltava 'return' antes de 'customMessage.INTERNAL_SERVER_ERROR_MODEL'
         }
     } catch (error) {
-        customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        //CORREÇÃO: faltava 'return' antes de 'customMessage.INTERNAL_SERVER_ERROR_CONTROLLER'
     }
 }
 
@@ -102,18 +108,21 @@ async function buscarIngredienteHamburguer(id) {
     }
 }
 
-async function atualizarHamburguer(ingredienteHamburguer, id, contentType) {
+async function atualizarIngredienteHamburguer(ingredienteHamburguer, id, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
         if (String(contentType).toLowerCase() == 'application/json') {
-            let resultBusca = await buscarHamburguer(id)
+            let resultBusca = await buscarIngredienteHamburguer(id)
+            //CORREÇÃO: chamava 'buscarHamburguer(id)' que não existe nesta controller,
+            //corrigido para 'buscarIngredienteHamburguer(id)'
             
             if (resultBusca.status) {
                 let validar = await validarDados(ingredienteHamburguer)
 
                 if (!validar) {
-                    hamburguer.id = Number(id)
+                    ingredienteHamburguer.id = Number(id)
+                    //CORREÇÃO: variável era 'hamburguer' (inexistente), corrigido para 'ingredienteHamburguer'
 
                     let result = await ingredienteHamburguerDAO.updateIngredienteHamburguer(ingredienteHamburguer)
 
@@ -136,7 +145,8 @@ async function atualizarHamburguer(ingredienteHamburguer, id, contentType) {
             return customMessage.ERROR_CONTENT_TYPE // 415
         }
     } catch (error) {
-        customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        //CORREÇÃO: faltava 'return' antes de 'customMessage.INTERNAL_SERVER_ERROR_CONTROLLER'
     }
 }
 
@@ -231,8 +241,10 @@ async function buscarHamburguerIDIngrediente(idIngrediente) {
 }
 
 async function tratarDados(ingredienteHamburguer) {
-    ingredienteHamburguer.id_ingrediente = ingredienteHamburguer.id_ingrediente.replaceAll("'", "")
-    ingredienteHamburguer.id_hamburguer = ingredienteHamburguer.id_hamburguer.replaceAll("'", "")
+    ingredienteHamburguer.id_ingrediente = Number(ingredienteHamburguer.id_ingrediente)
+    ingredienteHamburguer.id_hamburguer  = Number(ingredienteHamburguer.id_hamburguer)
+    //CORREÇÃO: os campos 'id_ingrediente' e 'id_hamburguer' são numéricos
+    //Corrigido para 'Number()' garantindo a tipagem correta
 
     return ingredienteHamburguer
 }
@@ -241,7 +253,7 @@ module.exports = {
     inserirNovoIngredienteHamburguer,
     listarIngredienteHamburger,
     buscarIngredienteHamburguer,
-    atualizarHamburguer,
+    atualizarIngredienteHamburguer,
     excluirIngredienteHamburguer,
     buscarIngredienteIDHamburguer,
     buscarHamburguerIDIngrediente

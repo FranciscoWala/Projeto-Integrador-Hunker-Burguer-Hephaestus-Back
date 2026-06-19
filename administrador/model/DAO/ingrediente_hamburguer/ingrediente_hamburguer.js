@@ -1,9 +1,9 @@
 /******************************************************
- * Objetivo: arquivo destinado ao CRUD de dados da tabela intermediária ingrediente_categoria no banco de dados 
+ * Objetivo: arquivo destinado ao CRUD de dados da tabela intermediária ingrediente_hamburguer no banco de dados 
  * MYSQL
  * Data: 12/06/2026
  * Autor: Samuel Silva Moreira Dos Santos
- * Versão: 1.0
+ * Versão: 1.1
 */
 
 //realizando import do knex
@@ -44,8 +44,9 @@ async function selectAllIngredienteHamburguer() {
     try {
         let sql = 
         `
-            select * from tbl_ingrediente_categoria order by id desc;
+            select * from tbl_ingrediente_hamburguer order by id desc;
         `
+        //CORREÇÃO: a query referenciava 'tbl_ingrediente_categoria' em vez de 'tbl_ingrediente_hamburguer'
 
         let result = await knexConection.raw(sql)
 
@@ -82,13 +83,13 @@ async function updateIngredienteHamburguer(ingredienteHamburguer) {
     try {
         let sql =
         `
-            update tbl_ingrediente_hamburguer
+            update tbl_ingrediente_hamburguer set
                 id_ingrediente     =    ${ingredienteHamburguer.id_ingrediente},
-                id_hamburguer       =    ${ingredienteHamburguer.id_hamburguer}
-        
+                id_hamburguer      =    ${ingredienteHamburguer.id_hamburguer}
 
             where id=${ingredienteHamburguer.id}
         `
+        //CORREÇÃO: faltava a cláusula 'set' após o nome da tabela no update
 
         let result = await knexConection.raw(sql)
 
@@ -165,16 +166,18 @@ async function selectIngredienteByIDHamburguer(idHamburguer) {
 
 async function selectHamburguerByIDIngrediente(idIngrediente) {
     try {
-        sql = 
+        let sql = 
         `
             select tbl_hamburguer.*
                 from tbl_hamburguer
-            inner join tbl_ingrediente_hamburger
-				on tbl_ingrediente_hamburger.id_hamburguer = tbl_hamburguer.id
+            inner join tbl_ingrediente_hamburguer
+				on tbl_ingrediente_hamburguer.id_hamburguer = tbl_hamburguer.id
             inner join tbl_ingrediente
-                on tbl_ingrediente_hamburger.id_ingrediente = tbl_ingrediente.id
+                on tbl_ingrediente_hamburguer.id_ingrediente = tbl_ingrediente.id
             where tbl_ingrediente.id = ${idIngrediente};
         `
+        //CORREÇÃO 1: nome da tabela estava 'tbl_ingrediente_hamburger' (sem 'u') em ambos os JOINs
+        //CORREÇÃO 2: variável 'sql' declarada sem 'let', causando vazamento para escopo global
 
         let result = await knexConection.raw(sql)
 
@@ -190,13 +193,12 @@ async function selectHamburguerByIDIngrediente(idIngrediente) {
 
 
 module.exports = {
-    insertIngredienteHamburguer,
-    selectAllIngredienteHamburguer,
-    updateIngredienteHamburguer,
-    selectByIDIngredienteHamburguer,
-    updateIngredienteHamburguer,
-    deleteIngredienteHamburguer,
-    deleteIngredienteByIDHamburguer,
-    selectIngredienteByIDHamburguer,
-    selectHamburguerByIDIngrediente
+  insertIngredienteHamburguer,
+  selectAllIngredienteHamburguer,
+  selectByIDIngredienteHamburguer,
+  deleteIngredienteHamburguer,
+  deleteIngredienteByIDHamburguer,
+  selectIngredienteByIDHamburguer,
+  selectHamburguerByIDIngrediente
 }
+
