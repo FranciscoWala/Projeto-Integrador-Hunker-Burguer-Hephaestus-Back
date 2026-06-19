@@ -23,6 +23,7 @@ const insertCategoria = async function (categoria) {
             return false;
         }
     } catch (error) {
+        //console.log(error);
         return false;
     };
 };
@@ -53,7 +54,7 @@ const selectAllCategoria = async function () {
             return false
         }
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         
         return false;
     };
