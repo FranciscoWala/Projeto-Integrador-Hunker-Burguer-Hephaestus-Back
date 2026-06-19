@@ -18,7 +18,7 @@ router.post('/', bodyParserJSON, async function(request, response){
 })
 
 router.get('/', async function(request, response){
-    let result = await usuarioController.listarUsuario()
+    let result = await usuarioController.listarUsuario()    
 
     response.status(result.status_code)
     response.json(result)

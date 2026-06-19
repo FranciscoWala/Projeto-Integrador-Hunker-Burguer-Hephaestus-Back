@@ -28,7 +28,7 @@ const inserirUsuario = async function(usuario, ContentType){
             if(validar){
                 return validar
             }else{
-                let result = await usuarioDAO.insertUsuario(await tratarDados(usuario))
+                let result = await usuarioDAO.insertUsuario(usuario)
 
                 if(result){
                     usuario.id = result
@@ -57,18 +57,18 @@ const buscarUsuario = async function(id){
             customMenssagen.ERROR_BAD_REQUEST.field = '[ID] IVALIDO'
             return customMenssagen.ERROR_BAD_REQUEST
         }else{
-            let result = await usuarioDAO.selectById(id)
+            let result = await usuarioDAO.selectUsuarioById(id)
 
             if(result){
                 if(result.length > 0){
-                    customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_RESPOSE.status
-                    customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_RESPOSE.status_code
-                    customMenssagen.DEFAULT_MESSAGE.message = customMenssagen.SUCCESS_RESPOSE.mensagens
-                    customMenssagen.DEFAULT_MESSAGE.response.classificacao = result
+                    customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_RESPONSE.status
+                    customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_RESPONSE.status_code
+                    customMenssagen.DEFAULT_MESSAGE.message = customMenssagen.SUCCESS_RESPONSE.mensagens
+                    customMenssagen.DEFAULT_MESSAGE.response.usuario = result
 
                     return customMenssagen.DEFAULT_MESSAGE
                 }else{
-                    return customMenssagen.ERRO_NOT_FONDI
+                    return customMenssagen.ERROR_NOT_FOUND
                 }
             }else{
                 return customMenssagen.ERROR_INTERNAL_SERVER_MODEL
@@ -76,6 +76,8 @@ const buscarUsuario = async function(id){
         }  
 
     } catch (error) {
+        console.log(error);
+        
         return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -84,20 +86,22 @@ const listarUsuario = async function(){
     let customMenssagen = JSON.parse(JSON.stringify(mensagens))
 
     try {
-        let result = await usuarioDAO.selectUsuario()
+        let result = await usuarioDAO.selectAllUsuario()
 
+        
         if (result) {
             if (result.length > 0) {
-                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_RESPOSE.status
-                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_RESPOSE.status_code
-                customMenssagen.DEFAULT_MESSAGE.response.filme = result
+                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_RESPONSE.status
+                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_RESPONSE.status_code
+                customMenssagen.DEFAULT_MESSAGE.response.usuario = result
                 customMenssagen.DEFAULT_MESSAGE.response.count = result.length
+
                 return customMenssagen.DEFAULT_MESSAGE
             } else {
-                return customMenssagen.ERRO_NOT_FONDI
+                return customMenssagen.ERROR_NOT_FOUND
             }
         } else {
-            return customMenssagen.ERROR_INTERNAL_SERVER_CONTROLLER
+            return customMenssagen.ERROR_INTERNAL_SERVER_DAO
         }
 
     } catch (error) {
@@ -120,16 +124,16 @@ const atualizarUsuario = async function(usuario, id, ContentType){
                 if(!validar){
                     usuario.id = Number(id)
 
-                    let result = await usuarioDAO.update(usuario)
+                    let result = await usuarioDAO.updateUsuario(usuario)
                     if(result){
-                        customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_UPDATE_ITEM.status
-                        customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_UPDATE_ITEM.status_code
-                        customMenssagen.DEFAULT_MESSAGE.mensage = customMenssagen.SUCCESS_UPDATE_ITEM.mensage
+                        customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_UPDATED_ITEM.status
+                        customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_UPDATED_ITEM.status_code
+                        customMenssagen.DEFAULT_MESSAGE.mensage = customMenssagen.SUCCESS_UPDATED_ITEM.mensage
                         customMenssagen.DEFAULT_MESSAGE.response = usuario
 
                         return customMenssagen.DEFAULT_MESSAGE
                     }else{
-                        return customMenssagen.ERRO_NOT_FONDI
+                        return customMenssagen.ERROR_INTERNAL_SERVER_MODEL
                     }
                 }else{
                     return validar
@@ -155,13 +159,13 @@ const deletarUsuario = async function(id){
        let buscar = await buscarUsuario(id)
 
         if(buscar.status){
-            let result = await usuarioDAO.deletUsuario(id)
+            let result = await usuarioDAO.deleteUsuario(id)
 
             if(result){
                 
-                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_DELETE_ITEM.status
-                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_DELETE_ITEM.status_code
-                customMenssagen.DEFAULT_MESSAGE.message = customMenssagen.SUCCESS_DELETE_ITEM.message
+                customMenssagen.DEFAULT_MESSAGE.status = customMenssagen.SUCCESS_DELETED_ITEM.status
+                customMenssagen.DEFAULT_MESSAGE.status_code = customMenssagen.SUCCESS_DELETED_ITEM.status_code
+                customMenssagen.DEFAULT_MESSAGE.message = customMenssagen.SUCCESS_DELETED_ITEM.message
 
                 return customMenssagen.DEFAULT_MESSAGE
 
