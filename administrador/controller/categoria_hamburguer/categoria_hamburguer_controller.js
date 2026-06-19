@@ -247,8 +247,6 @@ async function tratarDados(categoriaHamburguer) {
     return categoriaHamburguer
 }
 
-await listarCategoriaHamburguer()
-
 module.exports = {
     inserirCategoriaHamburguer,
     listarCategoriaHamburguer,
