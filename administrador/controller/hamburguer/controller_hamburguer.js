@@ -1,25 +1,17 @@
 /******************************************************
  * Objetivo: Arquivo responsável pela validação, tratamento e manipulação
- *           de dados para realizar o CRUD de hamburguer
+ * de dados para realizar o CRUD de hamburguer
  * Data: 12/06/2026
  * Autor: Samuel Silva Moreira Dos Santos
  * Versão: 1.0
  */
 
-//Import do DAO
 const hamburguerDAO = require('../../model/DAO/hamburguer/hamburguer.js')
-
-//Import da controller de categoriaHamburguer
 const categoriaHamburguerController = require('../categoria_hamburguer/categoria_hamburguer_controller.js')
-
-//Import da controller de ingredienteHamburguer
 const ingredienteHamburguerController = require('./controller_ingrediente_hamburguer.js')
-
-//Import das mensagens
 const configMessages = require('../modulo/configMensages.js')
 
 async function inserirNovoHamburguer(hamburguer, contentType) {
-    //Cria uma cópia dos JSON do arquivo de configuração de mensagens
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
@@ -33,48 +25,69 @@ async function inserirNovoHamburguer(hamburguer, contentType) {
 
                 if (result) {
                     hamburguer.id = result
+                    let teveAviso = false;
 
-                    for (let itemCategoria of hamburguer.categoria) {
+                    // Tratamento das categorias usando IF padrão (sem operador ternário)
+                    let listaCategorias = [];
+                    if (hamburguer.categorias) {
+                        listaCategorias = hamburguer.categorias;
+                    } else if (hamburguer.categoria) {
+                        listaCategorias = hamburguer.categoria;
+                    }
+
+                    for (let itemCategoria of listaCategorias) {
                         let categoriaHamburguer = {
                             "id_hamburguer": hamburguer.id,
                             "id_categoria": itemCategoria.id
                         }
 
-                        let resultCategoriaHamburguer = await categoriaHamburguerController.inserirCategoriaHamburguer(categoriaHamburguer)
+                        let resultCategoriaHamburguer = await categoriaHamburguerController.inserirCategoriaHamburguer(categoriaHamburguer, 'application/json')
 
-                        if (!resultCategoriaHamburguer.status) {
-                            return customMessage.SUCCESS_CREATED_ITEM_WARNING // 201 com alerta de cadastro
+                        if (resultCategoriaHamburguer.status == false) {
+                            teveAviso = true;
                         }
                     }
 
-                    for (let itemIngrediente of hamburguer.ingrediente) {
+                    let listaIngredientes = [];
+                    if (hamburguer.ingredientes) {
+                        listaIngredientes = hamburguer.ingredientes;
+                    } else if (hamburguer.ingrediente) {
+                        listaIngredientes = hamburguer.ingrediente;
+                    }
+
+                    for (let itemIngrediente of listaIngredientes) {
                         let ingredienteHamburguer = {
                             "id_hamburguer": hamburguer.id,
                             "id_ingrediente": itemIngrediente.id
                         }
 
-                        let resultIngredienteHamburguer = await ingredienteHamburguerController.inserirNovoIngredienteHamburguer(ingredienteHamburguer)
+                        let resultIngredienteHamburguer = await ingredienteHamburguerController.inserirNovoIngredienteHamburguer(ingredienteHamburguer, 'application/json')
 
-                        if (!resultIngredienteHamburguer.status) {
-                            return customMessage.SUCCESS_CREATED_ITEM_WARNING // 201 com alerta de cadastro
+                        if (resultIngredienteHamburguer.status == false) {
+                            teveAviso = true;
                         }
                     }
 
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
-                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
-                    customMessage.DEFAULT_MESSAGE.response.hamburguer = hamburguer
+                    if (teveAviso == true) {
+                        return customMessage.SUCCESS_CREATED_ITEM_WARNING;
+                    } else {
+                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
+                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
+                        customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
+                        customMessage.DEFAULT_MESSAGE.response.hamburguer = hamburguer
 
-                    return customMessage.DEFAULT_MESSAGE
+                        return customMessage.DEFAULT_MESSAGE
+                    }
                 } else {
-                    return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 (MODEL)
+                    return customMessage.ERROR_INTERNAL_SERVER_MODEL // 500 (MODEL)
                 }
             }
         } else {
             return customMessage.ERROR_CONTENT_TYPE //retorna 415
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        console.log(error)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (CONTROLLER)
     }
 }
 
@@ -86,6 +99,25 @@ async function listarHamburgeres() {
 
         if (result) {
             if (result.length > 0) {
+
+                for (let i = 0; i < result.length; i++) {
+                    let idHamburguer = result[i].id;
+
+                    let resultIngredientes = await ingredienteHamburguerController.buscarIngredienteIDHamburguer(idHamburguer);
+                    if (resultIngredientes.status == true) {
+                        result[i].ingredientes = resultIngredientes.response.ingrediente_hamburguer;
+                    } else {
+                        result[i].ingredientes = [];
+                    }
+
+                    let resultCategorias = await categoriaHamburguerController.buscarCategoriaByIdHamburguer(idHamburguer);
+                    if (resultCategorias.status == true) {
+                        result[i].categorias = resultCategorias.response.categoria;
+                    } else {
+                        result[i].categorias = [];
+                    }
+                }
+
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                 customMessage.DEFAULT_MESSAGE.count = result.length
@@ -93,13 +125,14 @@ async function listarHamburgeres() {
 
                 return customMessage.DEFAULT_MESSAGE // 200
             } else {
-                return customMessage.ERROR_NOT_FOUND //404
+                return customMessage.ERROR_NOT_FOUND // 404
             }
         } else {
-            return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            return customMessage.ERROR_INTERNAL_SERVER_MODEL // 500 (MODEL)
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        console.log(error)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (CONTROLLER)
     }
 }
 
@@ -109,12 +142,26 @@ async function buscarHamburguer(id) {
     try {
         if (id == undefined || String(id).replaceAll(" ", "") == '' || id == null || isNaN(id)) {
             customMessage.ERROR_BAD_REQUEST.field = '[ID] INVALIDO'
-            return customMessage.ERROR_BAD_REQUEST //400
+            return customMessage.ERROR_BAD_REQUEST // 400
         } else {
             let result = await hamburguerDAO.selectByIDHamburguer(id)
 
             if (result) {
                 if (result.length > 0) {
+                    let resultIngredientes = await ingredienteHamburguerController.buscarIngredienteIDHamburguer(id);
+                    if (resultIngredientes.status == true) {
+                        result[0].ingredientes = resultIngredientes.response.ingrediente_hamburguer;
+                    } else {
+                        result[0].ingredientes = []; 
+                    }
+
+                    let resultCategorias = await categoriaHamburguerController.buscarCategoriaByIdHamburguer(id);
+                    if (resultCategorias.status == true) {
+                        result[0].categorias = resultCategorias.response.categoria;
+                    } else {
+                        result[0].categorias = [];
+                    }
+
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.response.hamburguer = result
@@ -124,11 +171,12 @@ async function buscarHamburguer(id) {
                     return customMessage.ERROR_NOT_FOUND // 404 
                 }
             } else {
-                return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+                 return customMessage.ERROR_INTERNAL_SERVER_MODEL
             }
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        console.log(error)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (CONTROLLER)
     }
 }
 
@@ -139,46 +187,69 @@ async function atualizarHamburguer(hamburguer, id, contentType) {
         if (String(contentType).toLowerCase() == 'application/json') {
             let resultBusca = await buscarHamburguer(id)
 
-            if (resultBusca.status) {
+            if (resultBusca.status == true) {
                 let validar = await validarDados(hamburguer)
 
-                if (!validar) {
+                if (validar == false) {
                     hamburguer.id = Number(id)
-
-                    let result = await hamburguerDAO.updateHamburguer(await tratarDados(hamburguer))
+                    let hamburguerTratado = await tratarDados(hamburguer)
+                    let result = await hamburguerDAO.updateHamburguer(hamburguerTratado)
 
                     if (result) {
                         await ingredienteHamburguerController.excluirIngredienteHamburguer(id)
+                        
+                        let listaIngredientes = [];
+                        if (hamburguer.ingredientes) {
+                            listaIngredientes = hamburguer.ingredientes;
+                        } else if (hamburguer.ingrediente) {
+                            listaIngredientes = hamburguer.ingrediente;
+                        }
 
-                        for (let itemIngrediente of hamburguer.ingrediente) {
-                            
+                        for (let itemIngrediente of listaIngredientes) {
                             let ingredienteHamburguer = {
-                                "id_hamburguer" : hamburguer.id,
+                                "id_hamburguer": hamburguer.id,
                                 "id_ingrediente": itemIngrediente.id
                             }
-
                             await ingredienteHamburguerController.inserirNovoIngredienteHamburguer(ingredienteHamburguer, contentType)
+                        }
+
+                        await categoriaHamburguerController.excluirCategoriaByIdHamburguer(id)
+                        
+                        let listaCategorias = [];
+                        if (hamburguer.categorias) {
+                            listaCategorias = hamburguer.categorias;
+                        } else if (hamburguer.categoria) {
+                            listaCategorias = hamburguer.categoria;
+                        }
+
+                        for (let itemCategoria of listaCategorias) {
+                            let categoriaHamburguer = {
+                                "id_hamburguer": hamburguer.id,
+                                "id_categoria": itemCategoria.id
+                            }
+                            await categoriaHamburguerController.inserirCategoriaHamburguer(categoriaHamburguer, contentType)
                         }
 
                         customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
                         customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                         customMessage.DEFAULT_MESSAGE.response = hamburguer
 
-                        return customMessage.DEFAULT_MESSAGE //200
+                        return customMessage.DEFAULT_MESSAGE 
                     } else {
-                        return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 (MODEL)
+                        return customMessage.ERROR_INTERNAL_SERVER_MODEL
                     }
                 } else {
                     return validar
                 }
             } else {
-                return resultBusca //400 500 404
+                return resultBusca
             }
         } else {
-            return customMessage.ERROR_CONTENT_TYPE // 415
+            return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        console.log(error)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -188,21 +259,22 @@ async function excluirHamburguer(id) {
     try {
         let resultBusca = await buscarHamburguer(id)
 
-        if (resultBusca.status) {
+        if (resultBusca.status == true) {
             await ingredienteHamburguerController.excluirIngredienteHamburguer(id)
+            await categoriaHamburguerController.excluirCategoriaByIdHamburguer(id)
 
             let result = await hamburguerDAO.deleteHamburguer(id)
 
             if (result) {
                 return customMessage.SUCCESS_DELETED_ITEM
             } else {
-                return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL // 500 (MODEL)
             }
         } else {
             return resultBusca
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER // 500 (CONTROLLER)
     }
 }
 

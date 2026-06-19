@@ -62,8 +62,6 @@ const updateCategoriaHamburguer = async function (categoriaHamburguer) {
 
     } catch (error) {
 
-        console.log(`Deu problema aqui na categoria hamburguer [MODEL] ${error}`);
-
         return false
     }
 
@@ -117,14 +115,14 @@ const seletByIdCategoriaHamburguer = async function (id) {
 
 const selectHamburguerByIdCategoria = async function (idCategoria) {
     try {
-        let sql = `	select tbl_hamburguer.*
+        let sql = ` select tbl_hamburguer.*
             from tbl_hamburguer
                 inner join tbl_categoria_hamburguer
                     on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
                 inner join tbl_categoria
                     on tbl_categoria.id = tbl_categoria_hamburguer.id_categoria
             
-            where tbl_categoria.id = ${idCategoria.id};`
+            where tbl_categoria.id = ${idCategoria};`
 
         let result = await knexConection.raw(sql)
 
@@ -134,20 +132,21 @@ const selectHamburguerByIdCategoria = async function (idCategoria) {
             return false
         }
     } catch (error) {
+        console.log(error)
         return false
     }
 }
 
 const selectCategoriaByIdHamburguer = async function (idHamburguer) {
     try {
-        let sql = `	select tbl_categoria.*
+        let sql = ` select tbl_categoria.*
             from tbl_hamburguer
                 inner join tbl_categoria_hamburguer
                     on tbl_hamburguer.id = tbl_categoria_hamburguer.id_hamburguer
                 inner join tbl_categoria
                     on tbl_categoria.id = tbl_categoria_hamburguer.id_categoria
             
-            where tbl_hamburguer.id = ${idHamburguer.id};`
+            where tbl_hamburguer.id = ${idHamburguer};`
 
         let result = await knexConection.raw(sql)
 

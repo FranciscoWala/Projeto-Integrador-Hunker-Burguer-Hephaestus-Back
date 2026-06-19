@@ -38,6 +38,7 @@ const updateCategoria = async function (categoria) {
             return false;
         }
     } catch (error) {
+        console.log(error)
         return false;
     };
 };
