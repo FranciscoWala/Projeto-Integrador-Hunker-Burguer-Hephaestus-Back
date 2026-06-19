@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 //Import das mensagens
-const configMessages = require('../modulo/configMensages.js')
+const configMessages  = require('../modulo/configMensages.js');
 
 //Import do DAO
 const categoriaHamburguerDAO = require('../../model/DAO/categoria_hamburguer/categoria_hamburguer.js')
@@ -50,14 +50,14 @@ async function inserirCategoriaHamburguer(categoriaHamburguer, contentType) {
                 return validar // retorna 400
             }else{
                 
-                let result = await categoriaHamburguerDAO.insertCategoriaHamburguer(await tratarDados(categoriaHamburguer))
+                let result = await categoriaHamburguerDAO.insertCategoriaHamburguer(categoriaHamburguer)
 
                 if (result) {
                     
                     categoriaHamburguer.id = result
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_CREATED_ITEM.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_CREATED_ITEM.status_code
-                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCESS_CREATED_ITEM.message
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
+                    customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
                     customMessage.DEFAULT_MESSAGE.response = categoriaHamburguer
 
                     return customMessage.DEFAULT_MESSAGE
@@ -82,20 +82,20 @@ async function listarCategoriaHamburguer() {
 
         if (result) {
             if (result.length > 0) {
-                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
-                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                 customMessage.DEFAULT_MESSAGE.count = result.length
-                customMessage.DEFAULT_MESSAGE.response.categoriaHamburguer = result
+                customMessage.DEFAULT_MESSAGE.response.categoria_hamburguer = result
 
                 return customMessage.DEFAULT_MESSAGE // 200
             }else{
-                customMessage.ERROR_NOT_FOUND //404
+                return customMessage.ERROR_NOT_FOUND //404
             }
         }else{
-            customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
         }
     } catch (error) {
-        customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
     }
 }
 
@@ -111,8 +111,8 @@ async function buscarCategoriaHamburguer(id) {
 
             if (result) {
                 if (result.length > 0) {
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.response.hamburguer = result 
 
                     return customMessage.DEFAULT_MESSAGE
@@ -140,8 +140,8 @@ async function buscarCategoriaByIdHamburguer(idHamburguer) {
 
             if (result) {
                 if (result.length > 0) {
-                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_RESPONSE.status
-                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
                     customMessage.DEFAULT_MESSAGE.response.categoria = result
                     
                     return customMessage.DEFAULT_MESSAGE //200
@@ -174,8 +174,8 @@ async function atualizarCategoriaHamburguer(categoriaHamburguer, id, contentType
                     let result = await categoriaHamburguerDAO.updateCategoriaHamburguer(await tratarDados(categoriaHamburguer))
 
                     if (result) {
-                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCESS_UPDATED_ITEM.status
-                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCESS_UPDATED_ITEM.status_code
+                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_UPDATED_ITEM.status
+                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_UPDATED_ITEM.status_code
                         customMessage.DEFAULT_MESSAGE.response = categoriaHamburguer
 
                         return customMessage.DEFAULT_MESSAGE //200
@@ -206,7 +206,7 @@ async function excluirCategoriaHamburguer(id) {
             let result = await categoriaHamburguerDAO.deleteCategoriaHamburguer(id)
 
             if (result) {
-                return customMessage.SUCESS_DELETED_ITEM    
+                return customMessage.SUCCESS_DELETED_ITEM    
             } else {
                 return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
             }
@@ -228,7 +228,7 @@ async function excluirCategoriaByIdHamburguer(idHamburguer) {
             let result = await categoriaHamburguerDAO.deleteCategoriaByIdHamburguer(idHamburguer)
 
             if (result) {
-                return customMessage.SUCESS_DELETED_ITEM
+                return customMessage.SUCCESS_DELETED_ITEM
             } else {
                 return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 [MODEL]
             }
@@ -246,6 +246,8 @@ async function tratarDados(categoriaHamburguer) {
 
     return categoriaHamburguer
 }
+
+await listarCategoriaHamburguer()
 
 module.exports = {
     inserirCategoriaHamburguer,
