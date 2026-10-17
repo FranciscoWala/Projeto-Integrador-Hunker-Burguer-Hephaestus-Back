@@ -22,6 +22,14 @@ module.exports = {
         directory: './db/seeds'
       }
     },
-   
-    // Você pode adicionar configurações para produção, testes, etc.
-  };
+
+    // Configurações de Migração
+    migrations: {
+      tableName: 'knex_migrations', // Nome da tabela de migrações
+      directory: './db/migrations'
+    },
+    seeds: {
+      directory: './db/seeds'
+    }
+  }
+};

@@ -1,5 +1,6 @@
 
 const categoriaController = require('../controller/categoria/categoria_controller.js')
+const categoriaHamburguerController = require('../controller/categoria_hamburguer/categoria_hamburguer_controller.js')
 const { Router } = require('express')
 
 const express = require('express')
@@ -24,6 +25,14 @@ router.get('/', async function(request, response){
     response.status(result.status_code)
     response.json(result)
 }) 
+
+router.get('/:id/hamburgueres', async function(request, response) {
+    let idCategoria = request.params.id
+    let result = await categoriaHamburguerController.buscarHamburguerByIdCategoria(idCategoria)
+    
+    response.status(result.status_code)
+    response.json(result)
+})
 
 router.get('/:id', async function(request,response){
     let id = request.params.id

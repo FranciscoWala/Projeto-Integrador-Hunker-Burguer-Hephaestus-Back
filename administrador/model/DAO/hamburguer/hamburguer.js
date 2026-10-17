@@ -44,6 +44,7 @@ async function insertHamburguer(hamburguer) {
         }
         
     } catch (error) {
+        console.log(error)
         return false
     }
 }
@@ -64,6 +65,7 @@ async function selectAllHamburguer() {
         }
 
     } catch (error) {
+        console.log(error)
         return false
     }
 }
@@ -108,6 +110,7 @@ async function updateHamburguer(hamburguer) {
             return false
         }
     } catch (error) {
+        console.log(error)
         return false
     }
 }

@@ -37,14 +37,14 @@ async function inserirNovoIngrediente(ingrediente, contentType) {
 
                     return customMessage.DEFAULT_MESSAGE
                 } else {
-                    return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 (MODEL)
+                    return customMessage.ERROR_INTERNAL_SERVER_MODEL
                 }
             }
         }else{
             return customMessage.ERROR_CONTENT_TYPE //retorna 415
         }    
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -66,10 +66,10 @@ async function listarIngredientes() {
                 return customMessage.ERROR_NOT_FOUND //404
             }
         }else{
-            return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+            return customMessage.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER //500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -94,11 +94,11 @@ async function buscarIngrediente(id) {
                     return customMessage.ERROR_NOT_FOUND // 404 
                 }
             }else{
-                return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL
             }
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -124,7 +124,7 @@ async function atualizarIngrediente(ingrediente, id, contentType) {
 
                         return customMessage.DEFAULT_MESSAGE //200
                     } else {
-                        return customMessage.INTERNAL_SERVER_ERROR_MODEL //500 (MODEL)
+                        return customMessage.ERROR_INTERNAL_SERVER_MODEL
                     }
                 } else {
                     return validar
@@ -136,7 +136,7 @@ async function atualizarIngrediente(ingrediente, id, contentType) {
             return customMessage.ERROR_CONTENT_TYPE // 415
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -152,13 +152,13 @@ async function excluirIngrediente(id) {
             if (result) {
                 return customMessage.SUCCESS_DELETED_ITEM    
             } else {
-                return customMessage.INTERNAL_SERVER_ERROR_MODEL // 500 (MODEL)
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL
             }
         } else {
             return resultBusca
         }
     } catch (error) {
-        return customMessage.INTERNAL_SERVER_ERROR_CONTROLLER // 500 (CONTROLLER)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
