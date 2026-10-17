@@ -6,10 +6,12 @@ const bodyParserJSON = bodyParser.json()
 
 const app = express()
 
+app.use(express.json());
+
 const corsOptions = {
-    origin: '*',
-    methods: "GET, POST, PUT, DELETE, OPTIONS", 
-    allowedHeaders: ["content-type", "authorization", "accept"]
+    origin: "*", //configuração  de origem da requisicão (IP ou dominio)
+    methods: "GET, POST, PUT, DELETE, OPTIONS", //configiração dos verbos que serão utilizado na API
+    allowedHeaders: ["Content-type", "Authorization"] //configuração de permossoes
 }
 
 app.use(cors(corsOptions))
